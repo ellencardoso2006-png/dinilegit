@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dinilegit</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 50% 40%, #320006 0%, #090909 45%, #000 100%);
+    color: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.panel {
+    width: 540px;
+    max-width: 94%;
+    background: rgba(9, 9, 11, .97);
+    border: 1px solid #ff1717;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow:
+        0 0 18px #ff0000,
+        0 0 55px rgba(255, 0, 0, .45);
+}
+
+.header {
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+    font-weight: bold;
+    background: linear-gradient(90deg, #ff1010, #d90000, #ff1010);
+    text-shadow: 0 0 10px #fff;
+}
+
+.tabs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: #bd0000;
+}
+
+.tab {
+    padding: 14px 5px;
+    text-align: center;
+    cursor: pointer;
+    border-right: 1px solid rgba(0,0,0,.35);
+    transition: .2s;
+}
+
+.tab:hover,
+.tab.active {
+    background: #ff1717;
+    box-shadow: inset 0 -3px #fff;
+}
+
+.content {
+    padding: 22px 18px 25px;
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 18px 0;
+}
+
+.label {
+    font-size: 17px;
+}
+
+.switch {
+    width: 63px;
+    height: 31px;
+    border-radius: 30px;
+    background: #333;
+    padding: 4px;
+    cursor: pointer;
+    transition: .25s;
+}
+
+.switch::after {
+    content: "";
+    display: block;
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    background: #888;
+    transition: .25s;
+}
+
+.switch.on {
+    background: #f10b0b;
+    box-shadow: 0 0 13px rgba(255,0,0,.7);
+}
+
+.switch.on::after {
+    transform: translateX(32px);
+    background: white;
+}
+
+.value-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 7px;
+}
+
+.value {
+    color: #ff3030;
+    font-weight: bold;
+}
+
+input[type="range"] {
+    width: 100%;
+    accent-color: #ff1515;
+    cursor: pointer;
+}
+
+select {
+    width: 100%;
+    padding: 12px;
+    color: white;
+    background: #111;
+    border: 1px solid #b40000;
+    border-radius: 9px;
+    outline: none;
+}
+
+.title {
+    margin-top: 24px;
+    margin-bottom: 10px;
+    color: #ff3030;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.option {
+    padding: 13px;
+    background: #151515;
+    border: 1px solid #333;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: .2s;
+}
+
+.option.selected {
+    border-color: #ff1717;
+    background: #290606;
+    box-shadow: 0 0 10px rgba(255,0,0,.3);
+}
+
+.button {
+    width: 100%;
+    margin-top: 18px;
+    padding: 13px;
+    border: 1px solid #ff1717;
+    border-radius: 9px;
+    background: linear-gradient(90deg, #b40000, #ff1111);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.status {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 12px;
+    color: #888;
+}
+
+/* ÁREA DE DEMONSTRAÇÃO DA MIRA /
+
+.aim-demo {
+    position: relative;
+    height: 280px;
+    margin-top: 25px;
+    border: 1px solid #292929;
+    border-radius: 12px;
+    overflow: hidden;
+    background:
+        radial-gradient(circle, #181818 0%, #070707 65%, #000 100%);
+}
+
+.crosshair {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    transform: translate(-50%, -50%);
+    border: 2px solid white;
+    border-radius: 50%;
+    z-index: 3;
+    box-shadow: 0 0 8px rgba(255,255,255,.8);
+}
+
+.fov-circle {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 100px;
+    height: 100px;
+    transform: translate(-50%, -50%);
+    border: 2px solid #ff1717;
+    border-radius: 50%;
+    box-shadow:
+        0 0 10px rgba(255,0,0,.7),
+        inset 0 0 10px rgba(255,0,0,.12);
+    transition: width .12s, height .12s;
+    pointer-events: none;
+}
+
+.target {
+    position: absolute;
+    left: 68%;
+    top: 35%;
+    width: 16px;
+    height: 16px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: #ff1717;
+    box-shadow: 0 0 12px #ff0000;
+}
+
+.demo-label {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: #777;
+    font-size: 11px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="panel">
+
+    <div class="header">Dinilegit</div>
+
+    <div class="tabs">
+        <div class="tab active" data-tab="aim">AIM</div>
+        <div class="tab" data-tab="esp">ESP</div>
+        <div class="tab" data-tab="misc">MISC</div>
+        <div class="tab" data-tab="info">INFO</div>
+    </div>
+
+    <div class="content">
+
+        <!-- AIM -->
+        <div class="section active" id="aim">
+
+            <div class="row">
+                <span class="label">AIMBOT</span>
+                <div class="switch" data-name="AIMBOT"></div>
+            </div>
+
+            <div class="row">
+                <span class="label">AIMLOCK</span>
+                <div class="switch" data-name="AIMLOCK"></div>
+            </div>
+
+            <div class="row">
+                <span class="label">NORECOIL</span>
+                <div class="switch" data-name="NORECOIL"></div>
+            </div>
+
+            <div class="title">AimFOV</div>
+
+            <div class="value-line">
+                <span>Intensidade</span>
+                <span class="value" id="fovValue">50</span>
+            </div>
+
+            <input
+                id="fov"
+                type="range"
+                min="0"
+                max="100"
+                value="50"
+            >
+
+            <div class="title">Alvo</div>
+
+            <select id="targetSelect">
+                <option>Cabeça</option>
+                <option>Pescoço</option>
+                <option>Peito</option>
+                <option>Automático</option>
+            </select>
+
+            <div class="title">Tipo de Ação</div>
+
+            <div class="options">
+                <div class="option selected">Ao Atirar</div>
+                <div class="option">Ao Olhar</div>
+            </div>
+
+            <!-- DEMONSTRAÇÃO -->
+            <div class="aim-demo">
+
+                <div class="fov-circle" id="fovCircle"></div>
+
+                <div class="crosshair"></div>
+
+                <div class="target"></div>
+
+                <div class="demo-label">
+                    DEMONSTRAÇÃO VISUAL DO FOV
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ESP -->
+        <div class="section" id="esp">
+
+            <div class="row">
+                <span class="label">ESP</span>
+                <div class="switch" data-name="ESP"></div>
+            </div>
+
+            <div class="row">
+                <span class="label">LINHA</span>
+                <div class="switch" data-name="LINHA"></div>
+            </div>
+
+            <div class="row">
+                <span class="label">CAIXA</span>
+                <div class="switch" data-name="CAIXA"></div>
+            </div>
+
+            <div class="row">
+                <span class="label">DISTÂNCIA</span>
+                <div class="switch" data-name="DISTANCIA"></div>
+            </div>
+
+            <div class="row">
+                <span class="label">NOME</span>
+                <div class="switch" data-name="NOME"></div>
+            </div>
+
+        </div>
+
+        <!-- MISC -->
+        <div class="section" id="misc">
+
+            <div class="row">
+                <span class="label">FPS BOOST</span>
+                <div class="switch" data-name="FPS"></div>
+            </div>
+
+            <div class="row">
+                <span class="label">SMART MODE</span>
+                <div class="switch" data-name="SMART"></div>
+            </div>
+
+            <div class="row">
+                <span class="label">AUTO CONFIG</span>
+                <div class="switch" data-name="AUTO"></div>
+            </div>
+
+            <div class="row">
+                <span class="label">RANDOM MODE</span>
+                <div class="switch" data-name="RANDOM"></div>
+            </div>
+
+            <button class="button" id="random">
+                CONFIGURAÇÃO ALEATÓRIA
+            </button>
+
+        </div>
+
+        <!-- INFO -->
+        <div class="section" id="info">
+
+            <div class="title">Informações</div>
+
+            <p>Dinilegit</p>
+            <p>Interface futurista</p>
+            <p>Configuração demonstrativa</p>
+
+            <button class="button" id="reset">
+                RESTAURAR
+            </button>
+
+        </div>
+
+        <div class="status" id="status">
+            Sistema pronto
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+const tabs = document.querySelectorAll(".tab");
+const sections = document.querySelectorAll(".section");
+
+tabs.forEach(tab => {
+
+    tab.addEventListener("click", () => {
+
+        tabs.forEach(t => t.classList.remove("active"));
+        sections.forEach(s => s.classList.remove("active"));
+
+        tab.classList.add("active");
+
+        document
+            .getElementById(tab.dataset.tab)
+            .classList.add("active");
+    });
+
+});
+
+
+/ SWITCHES /
+
+document.querySelectorAll(".switch").forEach(sw => {
+
+    sw.addEventListener("click", () => {
+
+        sw.classList.toggle("on");
+
+        const nome = sw.dataset.name;
+
+        const estado = sw.classList.contains("on")
+            ? "ativado"
+            : "desativado";
+
+        document.getElementById("status").textContent =
+            nome + " " + estado;
+
+    });
+
+});
+
+
+/ FOV /
+
+const fov = document.getElementById("fov");
+const fovValue = document.getElementById("fovValue");
+const fovCircle = document.getElementById("fovCircle");
+
+function atualizarFOV() {
+
+    fovValue.textContent = fov.value;
+
+    /
+       Converte 0–100 para
+       um círculo de 30–230 pixels.
+    /
+
+    const tamanho =
+        30 + (Number(fov.value) * 2);
+
+    fovCircle.style.width = tamanho + "px";
+    fovCircle.style.height = tamanho + "px";
+}
+
+fov.addEventListener("input", atualizarFOV);
+
+atualizarFOV();
+
+
+/ OPÇÕES /
+
+document.querySelectorAll(".option").forEach(option => {
+
+    option.addEventListener("click", () => {
+
+        option.parentElement
+            .querySelectorAll(".option")
+            .forEach(o => {
+                o.classList.remove("selected");
+            });
+
+        option.classList.add("selected");
+
+    });
+
+});
+
+
+/ CONFIGURAÇÃO ALEATÓRIA /
+
+document.getElementById("random").addEventListener("click", () => {
+
+    document.querySelectorAll(".switch").forEach(sw => {
+
+        sw.classList.toggle(
+            "on",
+            Math.random() > .5
+        );
+
+    });
+
+    fov.value =
+        Math.floor(Math.random() * 101);
+
+    atualizarFOV();
+
+    document.getElementById("status").textContent =
+        "Configuração aleatória aplicada";
+
+});
+
+
+/ RESTAURAR */
+
+document.getElementById("reset").addEventListener("click", () => {
+
+    document.querySelectorAll(".switch")
+        .forEach(sw => {
+            sw.classList.remove("on");
+        });
+
+    fov.value = 50;
+
+    atualizarFOV();
+
+    document.getElementById("status").textContent =
+        "Configuração restaurada";
+
+});
+
+</script>
+
+</body>
+</html>
